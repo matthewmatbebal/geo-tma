@@ -1,0 +1,72 @@
+.container {
+    padding: 10px;
+    text-align: center;
+}
+
+.pointsWindow {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.pointsTitle {
+    margin-bottom: 10px;
+}
+
+.button {
+    border: 1px solid white ;
+    color: white;
+}
+
+.points {
+    margin-bottom: 10px;
+}
+
+.description {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+.friendsList {
+    margin-bottom: 15px;
+    max-height: 10em;
+    overflow-y: scroll;
+}
+
+.friendsTitle {
+    margin-bottom: 15px;
+}
+
+.friendCard {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: white;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #555555;
+    width: 100%;
+}
+
+.friendAvatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.userToken {
+
+}
+
+.friendInfo {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.inviteButtonContainer {
+    margin-top: 30px;
+}

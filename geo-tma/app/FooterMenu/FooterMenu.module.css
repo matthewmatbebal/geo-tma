@@ -1,0 +1,16 @@
+/* app/components/FooterMenu.module.css */
+.menu {
+    position: fixed;
+    display: flex;
+    padding: 10px;
+    bottom: 0;
+    justify-content: center;
+    width: 100%;
+}
+
+.menuItem {
+    text-align: center;
+    width: auto;
+    color: black;
+    border-radius: 10px;
+}
