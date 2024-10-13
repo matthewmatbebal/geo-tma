@@ -1,0 +1,26 @@
+{
+  "name": "geo-tma",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ngrok": "ngrok http http://localhost:3000"
+  },
+  "dependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@telegram-apps/telegram-ui": "^2.1.8",
+    "next": "14.2.15",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icon": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  }
+}
