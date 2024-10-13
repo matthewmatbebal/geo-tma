@@ -8,41 +8,71 @@ const AIChat = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);  // Для хранения выбранного файла
     const [response, setResponse] = useState<{ title: string; description: string } | null>(null); // Ответ от сервера
     const [loading, setLoading] = useState(false);  // Состояние загрузки
+    const [error, setError] = useState<string | null>(null); // Для хранения ошибки
+    const [imagePreview, setImagePreview] = useState<string | null>(null); // Для отображения превью изображения
 
+    // Обработка изменения файла
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
         setSelectedFile(file);
+        if (file) {
+            const fileURL = URL.createObjectURL(file); // Создаем превью
+            setImagePreview(fileURL);
+        }
     };
 
+    // Отправка файла на сервер для анализа
     const handleSend = async () => {
         if (!selectedFile) return;  // Если файл не выбран, не отправляем запрос
         setLoading(true);
+        setError(null);
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
         try {
-            // Заглушка для ответа от бэкенда с данными по ЭКГ
-            const mockResponse = {
-                title: "ECG Results Interpretation",
-                description: `
-                    - **Heart Rate**: 72 bpm (Normal range: 60-100 bpm)<br />
-                    - **Rhythm**: Sinus rhythm with no significant arrhythmias.<br />
-                    - **P wave**: Duration 0.08s (Normal: 0.06-0.12s), morphology is normal.<br />
-                    - **QRS Complex**: Duration 0.09s (Normal: 0.06-0.10s), axis is normal.<br />
-                    - **T wave**: Normal morphology, no signs of ischemia.<br />
-                    - **PR Interval**: 0.16s (Normal range: 0.12-0.20s), no first-degree AV block.<br />
-                    - **ST Segment**: No signs of ST elevation or depression, normal repolarization.<br />
-                    - **QT Interval**: 0.38s (Normal for heart rate).<br />
-                    
-                    **Conclusion**: This is a normal ECG with no abnormalities. Continue routine check-ups if needed.
-                `
-            };
+            const response = await fetch('http://13.51.205.105/analyze/img', {
+                method: 'POST',
+                body: formData
+            });
 
-            // Симуляция задержки при запросе на сервер
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            if (!response.ok) {
+                throw new Error(`Ошибка: ${response.statusText}`);
+            }
 
-            // Устанавливаем статический ответ вместо реального вызова API
-            setResponse(mockResponse);
+            const data = await response.json();  // Получаем ответ от сервера
+            setResponse(data);
         } catch (error) {
-            console.error('Ошибка при отправке файла:', error);
+            setError(`Ошибка при отправке файла: ${(error as Error).message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Удаление изображения
+    const handleDeleteImage = async () => {
+        if (!selectedFile) return;
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const fileName = selectedFile.name;  // Предполагаем, что имя файла передается как параметр
+
+            const deleteResponse = await fetch(`http://13.51.205.105/delete/img?file_name=${encodeURIComponent(fileName)}`, {
+                method: 'DELETE'
+            });
+
+            if (!deleteResponse.ok) {
+                throw new Error(`Ошибка: ${deleteResponse.statusText}`);
+            }
+
+            // Успешное удаление
+            setSelectedFile(null);
+            setImagePreview(null);
+            setResponse(null);
+        } catch (error) {
+            setError(`Ошибка при удалении файла: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
@@ -63,11 +93,22 @@ const AIChat = () => {
                 />
             </div>
 
+            {imagePreview && (
+                <div className={styles.imagePreview}>
+                    <img src={imagePreview} alt="Preview" className={styles.previewImage} />
+                    <ButtonCell onClick={handleDeleteImage} disabled={loading}>
+                        {loading ? 'Deleting...' : 'Delete Image'}
+                    </ButtonCell>
+                </div>
+            )}
+
             <div className={styles.sendButton}>
                 <ButtonCell disabled={!selectedFile || loading} onClick={handleSend}>
                     {loading ? 'Sending...' : 'Send'}
                 </ButtonCell>
             </div>
+
+            {error && <Text className={styles.errorText}>{error}</Text>}
 
             {response && (
                 <div className={styles.response}>
