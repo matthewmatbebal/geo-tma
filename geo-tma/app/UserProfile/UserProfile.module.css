@@ -6,6 +6,16 @@
     margin: 20px;
 }
 
+.container:before {
+    content: "";
+    background: url('../icons/bg.svg');
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    z-index: -1;
+    opacity: 0.4;
+}
+
 .avatar {
     width: 100px;
     height: 100px;
@@ -14,10 +24,12 @@
 }
 
 .username {
-color: #000000;
+color: #ffffff;
+text-align: center;
 }
 
 .points {
     font-size: 18px;
-    color: #555;
+    color: #fff;
+    text-align: center;
 }

@@ -43,6 +43,12 @@
     border: 1px solid white; /* Белая граница */
 }
 
+
+.previewImage {
+    max-width: 300px;
+    max-height: 300px;
+}
+
 .input label {
     color: white !important; /* Убедимся, что текст в лейбле тоже белый */
 }

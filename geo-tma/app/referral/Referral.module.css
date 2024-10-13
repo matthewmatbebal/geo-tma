@@ -1,6 +1,17 @@
 .container {
     padding: 10px;
     text-align: center;
+    background: unset;
+}
+
+.container:before {
+    content: "";
+    background: url('../icons/bg.svg');
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    z-index: 3;
+    opacity: 0.4;
 }
 
 .pointsWindow {
@@ -9,6 +20,7 @@
     margin-bottom: 20px;
     border-radius: 10px;
     color: white;
+    background: none;
 }
 
 .pointsTitle {

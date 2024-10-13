@@ -59,11 +59,11 @@ const UserProfile = () => {
         <div className={styles.container}>
             {user ? (
                 <div>
-                    <LargeTitle weight="3" className={styles.username}>{user.username}</LargeTitle>
+                    <LargeTitle weight="1" className={styles.username}>{user.username}</LargeTitle>
                     {user.photoUrl && (
                         <img src={user.photoUrl} alt="User Avatar" className={styles.avatar} />
                     )}
-                    <LargeTitle weight="2" className={styles.points}>Количество поинтов: {points}</LargeTitle>
+                    <LargeTitle weight="3" className={styles.points}>Points {points}</LargeTitle>
 
                     {/*сделать карточки тг ui*/}
 

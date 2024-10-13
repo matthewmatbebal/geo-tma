@@ -11,6 +11,8 @@ const AIChat = () => {
     const [error, setError] = useState<string | null>(null); // Для хранения ошибки
     const [imagePreview, setImagePreview] = useState<string | null>(null); // Для отображения превью изображения
 
+    const userId = "testUser123"; // Текущий userId, который отправляется в запросе
+
     // Обработка изменения файла
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
@@ -31,48 +33,22 @@ const AIChat = () => {
         formData.append('file', selectedFile);
 
         try {
-            const response = await fetch('http://13.51.205.105/analyze/img', {
+            // Добавляем userId как query-параметр в URL
+            const response = await fetch(`http://13.51.205.105/analyze/img?userId=${encodeURIComponent(userId)}`, {
                 method: 'POST',
                 body: formData
             });
 
             if (!response.ok) {
-                throw new Error(`Ошибка: ${response.statusText}`);
+                const errorData = await response.json();  // Получаем детализированное сообщение об ошибке
+                const errorMsg = errorData.detail?.[0]?.msg || 'Произошла ошибка';
+                throw new Error(errorMsg);
             }
 
-            const data = await response.json();  // Получаем ответ от сервера
+            const data = await response.json();  // Получаем успешный ответ от сервера
             setResponse(data);
         } catch (error) {
-            setError(`Ошибка при отправке файла: ${(error as Error).message}`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Удаление изображения
-    const handleDeleteImage = async () => {
-        if (!selectedFile) return;
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            const fileName = selectedFile.name;  // Предполагаем, что имя файла передается как параметр
-
-            const deleteResponse = await fetch(`http://13.51.205.105/delete/img?file_name=${encodeURIComponent(fileName)}`, {
-                method: 'DELETE'
-            });
-
-            if (!deleteResponse.ok) {
-                throw new Error(`Ошибка: ${deleteResponse.statusText}`);
-            }
-
-            // Успешное удаление
-            setSelectedFile(null);
-            setImagePreview(null);
-            setResponse(null);
-        } catch (error) {
-            setError(`Ошибка при удалении файла: ${(error as Error).message}`);
+            setError(`Ошибка: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
@@ -96,9 +72,6 @@ const AIChat = () => {
             {imagePreview && (
                 <div className={styles.imagePreview}>
                     <img src={imagePreview} alt="Preview" className={styles.previewImage} />
-                    <ButtonCell onClick={handleDeleteImage} disabled={loading}>
-                        {loading ? 'Deleting...' : 'Delete Image'}
-                    </ButtonCell>
                 </div>
             )}
 
